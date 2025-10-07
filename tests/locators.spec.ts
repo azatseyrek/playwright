@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://localhost:4200/');
@@ -57,4 +57,21 @@ test('Parent element locators', async ({ page }) => {
     .click();
 
   await page.locator('nb-card').filter({ hasText: 'Basic form' }).getByRole('textbox', { name: 'Email' }).click();
+});
+
+test('Re-using locators', async ({ page }) => {
+  const basicForm = page.locator('nb-card').filter({ hasText: 'Basic form' });
+  const emailField = basicForm.getByRole('textbox', { name: 'Email' });
+  const passwordField = basicForm.getByRole('textbox', { name: 'Password' });
+  const submitButton = basicForm.getByRole('button', { name: 'Submit' });
+
+  await emailField.fill('johndoe@example.com');
+  await passwordField.fill('12345');
+  await basicForm.locator('nb-checkbox').click();
+  await submitButton.click();
+
+  // Assertions
+  await expect(emailField).toHaveValue('johndoe@example.com');
+  await expect(passwordField).toHaveValue('12345');
+  await expect(basicForm.locator('nb-checkbox .custom-checkbox')).toHaveClass(/checked/);
 });
