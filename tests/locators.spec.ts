@@ -75,3 +75,26 @@ test('Re-using locators', async ({ page }) => {
   await expect(passwordField).toHaveValue('12345');
   await expect(basicForm.locator('nb-checkbox .custom-checkbox')).toHaveClass(/checked/);
 });
+
+test('Extracting values', async ({ page }) => {
+  // single test value
+  const basicForm = page.locator('nb-card').filter({ hasText: 'Basic form' });
+  const buttonText = await basicForm.getByRole('button', { name: 'Submit' }).textContent();
+  expect(buttonText).toBe('Submit');
+
+  // all text values
+  const allRadioTexts = await page.locator('nb-radio').allTextContents();
+  expect(allRadioTexts.length).toBe(3);
+  expect(allRadioTexts).toContain('Option 1');
+  expect(allRadioTexts).toContain('Option 2');
+  expect(allRadioTexts).toContain('Disabled Option');
+
+  // /input value
+  const emailField = basicForm.getByRole('textbox', { name: 'Email' });
+  await emailField.fill('johndoe@example.com');
+  const emailValue = await emailField.inputValue();
+  expect(emailValue).toBe('johndoe@example.com');
+
+  const placeholderValue = await emailField.getAttribute('placeholder');
+  expect(placeholderValue).toBe('Email');
+});
