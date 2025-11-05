@@ -1,5 +1,7 @@
-### Ngx-Admin Angular 14 application from akveo.com
+# Project Evaluation
 
-This is modified and more lightweight version of original application to practice UI Automation with Playwright.
+This project is shared for evaluation purposes.
 
-The original repo is here: https://github.com/akveo/ngx-admin
+Please check the **test files** and related **notes** for details about my work and implementation process.
+
+For any questions or clarifications, you can contact me at **azat.seyrek@adesso.com.tr**.
